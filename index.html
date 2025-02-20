@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>可以成为我的恋人吗？</title>
+
+  <!-- 引入 Vue 3 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.global.js"></script>
+
+  <style scoped>
+    /* 全局样式，设置基本字体和盒模型 */
+    html {
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: inherit;
+    }
+
+    /* 容器样式，设置内边距和最大宽度，并使用flex布局使其内容居中 */
+    .container {
+      padding: 5vw; /* 使用视口宽度百分比作为内边距 */
+      max-width: 90vw; /* 使用视口宽度百分比作为最大宽度 */
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh; /* 确保容器至少占满整个视口高度 */
+    }
+
+    .img {
+      width: 40vw; /* 宽度为父元素宽度的100% */
+      height: 40vw;
+      margin: 0 auto; /* 容器居中显示 */
+    }
+
+    .img img {
+      width: 100%;
+    }
+
+    /* 标题样式 */
+    h1 {
+      color: rgb(37, 37, 37);
+      font-size: 7vw; /* 使用视口宽度百分比作为字体大小 */
+      text-align: center;
+    }
+
+    /* 列表样式 */
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    /* 修改按钮容器样式，使其内部按钮居中 */
+    .btn {
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn button {
+      border: 1px solid #ccc;
+      outline: none;
+      color: white;
+      /* 增加字体样式设置 */
+      font-family: Arial, sans-serif; 
+    }
+
+    .ok {
+      background-color: #e0867f;
+      margin-right: 5vw;
+    }
+
+    .no {
+      background-color: #6496c4;
+    }
+
+    li {
+      padding: 2vw; /* 使用视口宽度百分比作为内边距 */
+      border-bottom: 1px solid #ccc;
+    }
+
+    /* 媒体查询，针对不同屏幕尺寸调整样式 */
+    @media (min-width: 768px) {
+      .container {
+        max-width: 600px;
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      li {
+        padding: 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body style="background-color: pink;">
+  <div id="app">
+    <!-- 页面容器 -->
+    <div class="container">
+      <div v-if="declare">
+        <div class="img">
+          <img :src="'image/0' + imgvalue + '.gif'" alt="">
+        </div>
+        <!-- 显示消息 -->
+        <h1>{{ message }}</h1>
+        <!-- 模拟一些列表内容 -->
+        <div class="btn">
+          <button class="ok" :style="{ 'font-size': okfontSize + 'px', width: okbuttonWidth + 'px', height: okbuttonHeight + 'px' }" @click="handleOk">{{ ok }}</button>
+          <button class="no" :style="{ width: nobuttonWidth + 'px', height: nobuttonHeight + 'px' }" @click="handleNo">{{ no }}</button>
+        </div>
+      </div>
+      <div v-else>
+        <!-- 显示消息 -->
+        <h1>!!!喜欢你!!(≧ω≦)♡o</h1>
+        <div class="img">
+          <img src="image/05.gif" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const { createApp, ref } = Vue;
+
+    const app = createApp({
+      setup() {
+        // 定义一个响应式数据用于控制页面显示内容
+        const message = ref("可以成为我的恋人吗？");
+        const ok = ref("可以");
+        const no = ref("不要");
+        const okbuttonWidth = ref(55);
+        const okbuttonHeight = ref(20);
+        // 确保初始字体大小合适
+        const okfontSize = ref(16); 
+        const counter = ref(0);
+        const imgvalue = ref(1);
+        const declare = ref(true);
+
+        const nobuttonHeight = ref(20);
+
+        // 同意
+        const handleOk = () => {
+          declare.value = false;
+        };
+
+        // 拒绝
+        const handleNo = () => {
+          // 切换图片
+          imgvalue.value++;
+          // 如果切换图片大于最后一张 则设置为最后一张
+          if (imgvalue.value > 4) {
+            imgvalue.value = 4;
+          }
+          // 修改拒绝的字
+          if (counter.value == 0) {
+            no.value = "？你认真的吗...";
+          } else if (counter.value == 1) {
+            no.value = "要不再想想？";
+          } else if (counter.value == 2) {
+            no.value = "不许选这个";
+          } else if (counter.value == 3) {
+            no.value = "我会很伤心的";
+          } else {
+            no.value = "不行";
+          }
+          counter.value++;
+          okbuttonWidth.value = okbuttonWidth.value + 20;
+          okbuttonHeight.value = okbuttonHeight.value + 10;
+          okfontSize.value = okfontSize.value + 4;
+        };
+
+        return {
+          message,
+          ok,
+          no,
+          okbuttonWidth,
+          okbuttonHeight,
+          okfontSize,
+          counter,
+          imgvalue,
+          declare,
+          nobuttonHeight,
+          handleOk,
+          handleNo
+        };
+      }
+    });
+
+    app.mount("#app");
+  </script>
+</body>
+
+</html>
